@@ -12,7 +12,7 @@ module.exports = {
     endTime: 'End Time',
     location: 'Location',
     amount: 'Amount',
-    contractName: 'ContractName',
+    contractName: 'Name',
     contractType: 'ContractType'
   },
   chart: {

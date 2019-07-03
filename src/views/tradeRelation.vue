@@ -142,14 +142,15 @@ export default {
   mounted () {
     this.init()
   },
-  updated () {
-    // lang状态改变时重新渲染line chart
-    this.init()
+  watch: {
+    lang (val, oldVal) {
+      this.initChart()
+    }
   },
   methods: {
-    initChart() {
-      var dom = document.getElementById("container");
-      var myChart = echarts.init(dom);
+    initChart () {
+      var dom = document.getElementById('container')
+      var myChart = echarts.init(dom)
       // var app = {};
       myChart.setOption({
         xAxis: {
@@ -172,9 +173,9 @@ export default {
         tooltip: {
           trigger: 'axis'
         }
-      });
+      })
     },
-    init() {
+    init () {
       let p = []
       p.source = this.source
       p.target = this.target
