@@ -11,11 +11,17 @@
                  text-color="#fff"
                  active-text-color="#ffd04b"
                  router>
-          <el-menu-item index="/forceGraph">系统所有企业</el-menu-item>
-          <el-menu-item index="/subGraph">小图</el-menu-item>
-          <el-menu-item index="/contractUpload">合同批量导入</el-menu-item>
+          <el-menu-item index="/forceGraph">{{$t('navbar.all')}}</el-menu-item>
+          <el-menu-item index="/subGraph">{{$t('navbar.subgraph')}}</el-menu-item>
+          <el-menu-item index="/contractUpload">{{$t('navbar.contractImport')}}</el-menu-item>
         </el-menu>
       </el-col>
+    </el-row>
+    <el-row>
+      <el-radio-group v-model="lang" size="small">
+        <el-radio label="zh" border>中</el-radio>
+        <el-radio label="en" border>EN</el-radio>
+      </el-radio-group>
     </el-row>
 
     <el-row>
@@ -36,44 +42,44 @@
             <el-table-column type="expand">
               <template slot-scope="props">
                 <el-form label-position="left" inline class="demo-table-expand">
-                  <el-form-item label="合约ID">
+                  <el-form-item :label="$t('contract.contractId')">
                     <span>{{ props.row.contractId }}</span>
                   </el-form-item>
-                  <el-form-item label="开始时间">
+                  <el-form-item :label="$t('contract.startTime')">
                     <span>{{ props.row.startTime }}</span>
                   </el-form-item>
-                  <el-form-item label="结束时间">
+                  <el-form-item :label="$t('contract.endTime')">
                     <span>{{ props.row.endTime }}</span>
                   </el-form-item>
-                  <el-form-item label="地点">
+                  <el-form-item :label="$t('contract.location')">
                     <span>{{ props.row.location }}</span>
                   </el-form-item>
-                  <el-form-item label="金额">
+                  <el-form-item :label="$t('contract.amount')">
                     <span>{{ props.row.amount }}</span>
                   </el-form-item>
-                  <el-form-item label="合约名">
+                  <el-form-item :label="$t('contract.contractName')">
                     <span>{{ props.row.contractName }}</span>
                   </el-form-item>
-                  <el-form-item label="合约类型">
+                  <el-form-item :label="$t('contract.contractType')">
                     <span>{{ props.row.contractType }}</span>
                   </el-form-item>
                 </el-form>
               </template>
             </el-table-column>
             <el-table-column
-              label="合约ID"
+              :label="$t('contract.contractId')"
               prop="contractId">
             </el-table-column>
             <el-table-column
-              label="开始时间"
+              :label="$t('contract.startTime')"
               prop="startTime">
             </el-table-column>
             <el-table-column
-              label="金额"
+              :label="$t('contract.amount')"
               prop="amount">
             </el-table-column>
             <el-table-column
-              label="类型"
+              :label="$t('contract.contractType')"
               prop="contractType">
             </el-table-column>
           </el-table>
@@ -85,7 +91,6 @@
         </div>
       </el-col>
     </el-row>
-
 
   </div>
 </template>
@@ -120,17 +125,32 @@ export default {
       loading: true
     }
   },
-  computed: mapState({
-    relationDetail: state => state.graphData.relationDetail
-  }),
+  computed: {
+    ...mapState({
+      relationDetail: state => state.graphData.relationDetail
+    }),
+    lang: {
+      get () {
+        return this.$store.state.graphData.language
+      },
+      set (lang) {
+        this.$i18n.locale = lang
+        this.$store.dispatch('setLanguage', lang)
+      }
+    }
+  },
   mounted () {
+    this.init()
+  },
+  updated () {
+    // lang状态改变时重新渲染line chart
     this.init()
   },
   methods: {
     initChart() {
       var dom = document.getElementById("container");
       var myChart = echarts.init(dom);
-      var app = {};
+      // var app = {};
       myChart.setOption({
         xAxis: {
           type: 'category',
@@ -144,7 +164,8 @@ export default {
           type: 'line'
         }],
         title: {
-          text: "近三年贸易频率",
+          text: this.$i18n.t('chart.linechart'),
+          // text: this.legend,
           top: 'bottom',
           left: 'center'
         },

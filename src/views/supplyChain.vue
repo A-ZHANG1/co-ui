@@ -11,11 +11,17 @@
                  text-color="#fff"
                  active-text-color="#ffd04b"
                  router>
-          <el-menu-item index="/forceGraph">系统所有企业</el-menu-item>
-          <el-menu-item index="/subGraph">小图</el-menu-item>
-          <el-menu-item index="/contractUpload">合同批量导入</el-menu-item>
+          <el-menu-item index="/forceGraph">{{$t('navbar.all')}}</el-menu-item>
+          <el-menu-item index="/subGraph">{{$t('navbar.subgraph')}}</el-menu-item>
+          <el-menu-item index="/contractUpload">{{$t('navbar.contractImport')}}</el-menu-item>
         </el-menu>
       </el-col>
+    </el-row>
+    <el-row>
+      <el-radio-group v-model="lang" size="small">
+        <el-radio label="zh" border>中</el-radio>
+        <el-radio label="en" border>EN</el-radio>
+      </el-radio-group>
     </el-row>
 
     <el-row>
@@ -39,10 +45,21 @@ export default {
     return {
     }
   },
-  computed: mapState({
-    nodes: state => state.graphData.supplyChainNodes,
-    links: state => state.graphData.supplyChainLinks
-  }),
+  computed: {
+    ...mapState({
+      nodes: state => state.graphData.supplyChainNodes,
+      links: state => state.graphData.supplyChainLinks
+    }),
+    lang: {
+      get () {
+        return this.$store.state.graphData.language
+      },
+      set (lang) {
+        this.$i18n.locale = lang
+        this.$store.dispatch('setLanguage', lang)
+      }
+    }
+  },
   mounted () {
     this.getSupplyChain()
   },

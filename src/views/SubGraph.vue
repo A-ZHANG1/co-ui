@@ -76,7 +76,7 @@ export default {
       companyName: this.$route.params.companyName,
       // companyName: '锐迪科微电子（上海）有限公司',
       id: this.$route.params.id,
-      depth: 2,
+      depth: 1,
       visible: false,
       computedWeight: 0,
       dialogFormVisible: false
