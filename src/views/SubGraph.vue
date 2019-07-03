@@ -2,7 +2,7 @@
   <div>
     <el-row>
       <el-col :span="18">
-        <div style="background:#1f2d3d;height:60px">合同</div>
+        <div style="background:#1f2d3d;height:60px">-</div>
       </el-col>
       <el-col :span="6">
         <el-menu :default-active="$route.path"
@@ -11,15 +11,21 @@
                  text-color="#fff"
                  active-text-color="#ffd04b"
                  router>
-          <el-menu-item index="/forceGraph">系统所有企业</el-menu-item>
-          <el-menu-item index="/subGraph">小图</el-menu-item>
-          <el-menu-item index="/contractUpload">合同批量导入</el-menu-item>
+          <el-menu-item index="/forceGraph">{{$t('navbar.all')}}</el-menu-item>
+          <el-menu-item index="/subGraph">{{$t('navbar.subgraph')}}</el-menu-item>
+          <el-menu-item index="/contractUpload">{{$t('navbar.contractImport')}}</el-menu-item>
         </el-menu>
       </el-col>
     </el-row>
+    <el-row>
+      <el-radio-group v-model="lang" size="small">
+        <el-radio label="zh" border>中</el-radio>
+        <el-radio label="en" border>EN</el-radio>
+      </el-radio-group>
+    </el-row>
 
     <el-row>
-      <div style="margin:0px 0px 20px 110px;padding:0;width:820px;height:0px;background-color:lightGrey;overflow:hidden;"></div>
+      <div style="margin:0px 0px 20px 110px;padding:0;width:820px;height:0px;background-color:white;overflow:hidden;"></div>
     </el-row>
 
     <el-row >
@@ -31,7 +37,7 @@
         <el-input v-model="depth" placeholder="请输入查询深度(default: 2)"></el-input>
       </el-col>
       <el-col :span='2'>
-        <el-button plain @click="$getInfo">检视</el-button>
+        <el-button plain @click="$getInfo">{{$t('navbar.inspect')}}</el-button>
       </el-col>
     </el-row>
 
@@ -67,8 +73,8 @@ export default {
     console.log(this.$route.params)
     return {
       activePage: '/forceGraph',
-      // companyName: this.$route.params.companyName,
-      companyName: '锐迪科微电子（上海）有限公司',
+      companyName: this.$route.params.companyName,
+      // companyName: '锐迪科微电子（上海）有限公司',
       id: this.$route.params.id,
       depth: 2,
       visible: false,
@@ -76,12 +82,23 @@ export default {
       dialogFormVisible: false
     }
   },
-  computed: mapState({
-    nodes: state => state.graphData.subGraphNodes,
-    links: state => state.graphData.subGraphLinks,
-    companyInfo: state => state.graphData.companyInfo,
-    companyWeight: state => state.graphData.companyWeight
-  }),
+  computed: {
+    ...mapState({
+      nodes: state => state.graphData.subGraphNodes,
+      links: state => state.graphData.subGraphLinks,
+      companyInfo: state => state.graphData.companyInfo,
+      companyWeight: state => state.graphData.companyWeight
+    }),
+    lang: {
+      get () {
+        return this.$store.state.graphData.language
+      },
+      set (lang) {
+        this.$i18n.locale = lang
+        this.$store.dispatch('setLanguage', lang)
+      }
+    }
+  },
   mounted () {
     // console.log(this.depth)
   },

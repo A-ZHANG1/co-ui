@@ -2,7 +2,7 @@
   <div>
     <el-row>
       <el-col :span="18">
-        <div style="background:#1f2d3d;height:60px">合同</div>
+        <div style="background:#1f2d3d;height:60px">-</div>
       </el-col>
       <el-col :span="6">
         <el-menu :default-active="$route.path"
@@ -11,19 +11,25 @@
                  text-color="#fff"
                  active-text-color="#ffd04b"
                  router>
-          <el-menu-item index="/forceGraph">系统所有企业</el-menu-item>
-          <el-menu-item index="/subGraph">小图</el-menu-item>
-          <el-menu-item index="/contractUpload">合同批量导入</el-menu-item>
+          <el-menu-item index="/forceGraph">{{$t('navbar.all')}}</el-menu-item>
+          <el-menu-item index="/subGraph">{{$t('navbar.subgraph')}}</el-menu-item>
+          <el-menu-item index="/contractUpload">{{$t('navbar.contractImport')}}</el-menu-item>
         </el-menu>
       </el-col>
     </el-row>
-
     <el-row>
-      <div style="margin:0px 0px 20px 110px;padding:0;width:820px;height:0px;background-color:lightGrey;overflow:hidden;"></div>
+      <el-radio-group v-model="lang" size="small">
+        <el-radio label="zh" border>中</el-radio>
+        <el-radio label="en" border>EN</el-radio>
+      </el-radio-group>
     </el-row>
 
     <el-row>
-      <el-button @click="getSupplyChain">供应链检视</el-button>
+      <div style="margin:0px 0px 20px 110px;padding:0;width:820px;height:0px;background-color:white;overflow:hidden;"></div>
+    </el-row>
+
+    <el-row>
+      <el-button @click="getSupplyChain">{{$t('navbar.supplyChain')}}</el-button>
     </el-row>
 
     <el-row>
@@ -55,11 +61,22 @@ export default {
       supplyChainVisible: false
     }
   },
-  computed: mapState({
-    nodes: state => state.graphData.nodes,
-    links: state => state.graphData.links,
-    companyInfo: state => state.graphData.companyInfo
-  }),
+  computed: {
+    ...mapState({
+      nodes: state => state.graphData.nodes,
+      links: state => state.graphData.links,
+      companyInfo: state => state.graphData.companyInfo
+    }),
+    lang: {
+      get () {
+        return this.$store.state.graphData.language
+      },
+      set (lang) {
+        this.$i18n.locale = lang
+        this.$store.dispatch('setLanguage', lang)
+      }
+    }
+  },
   mounted () {
     this.initChart()
   },
@@ -164,8 +181,7 @@ export default {
         }
       })
     },
-    getSupplyChain(){
-
+    getSupplyChain () {
       this.$router.push({
         name: 'supplyChain'
       })

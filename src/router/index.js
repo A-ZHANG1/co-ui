@@ -30,6 +30,10 @@ export default new Router({
       path: '/tradeRelation',
       name: 'tradeRelation',
       component: () => import('@/views/tradeRelation')
+    }, {
+      path: '/dimensionReducedGraph',
+      name: 'dimensionReducedGraph',
+      component: () => import('@/views/dimensionReducedGraph')
     }
   ]
 })

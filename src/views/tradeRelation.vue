@@ -19,7 +19,7 @@
     </el-row>
 
     <el-row>
-      <div style="margin:0px 0px 20px 110px;padding:0;width:820px;height:0px;background-color:lightGrey;overflow:hidden;"></div>
+      <div style="margin:0px 0px 20px 110px;padding:0;width:820px;height:0px;background-color:white;overflow:hidden;"></div>
     </el-row>
 
     <div>
@@ -169,6 +169,5 @@ export default {
     }
   }
 }
-
 
 </script>

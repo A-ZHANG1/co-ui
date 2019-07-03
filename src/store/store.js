@@ -8,12 +8,18 @@ import {
   getCompanyInfoById,
   getSubGraphById,
   getSubGraphByName,
-  getRelationDetailByCompanyNames
+  getRelationDetailByCompanyNames,
+  getAggregatedLinks,
+  getAggregatedNodes
 } from '@/api/api'
 import {getSupplyChain} from '../api/api'
 
+import Cookies from 'js-cookie'
+
 const graphData = {
   state: {
+    // language: Cookies.get('language') || 'zh',
+    language: null,
     nodes: null,
     links: null,
     subGraphNodes: null,
@@ -27,11 +33,21 @@ const graphData = {
   },
 
   mutations: {
+    SET_LANGUAGE: (state, language) => {
+      state.language = language
+      Cookies.set('language', language)
+    },
     SET_NODES: (state, nodes) => {
       state.nodes = nodes
     },
     SET_LINKS: (state, links) => {
       state.links = links
+    },
+    SET_AGGREGATED_NODES: (state, nodes) => {
+      state.aggregetedNodes = nodes
+    },
+    SET_AGGREGATED_LINKS: (state, links) => {
+      state.aggregetedLinks = links
     },
     SET_SUB_GRAPH_NODES: (state, nodes) => {
       state.subGraphNodes = nodes
@@ -56,7 +72,9 @@ const graphData = {
     }
   },
   actions: {
-
+    setLanguage({ commit }, language) {
+      commit('SET_LANGUAGE', language)
+    },
     GetAllLinks ({commit}, links) {
       return new Promise((resolve, reject) => {
         getAllLinks().then(response => {
@@ -97,6 +115,52 @@ const graphData = {
             nodes.push(node)
           }
           commit('SET_NODES', nodes)
+          resolve()
+        }).catch(error => {
+          console.log(error)
+          reject(error)
+        })
+      })
+    },
+    GetAggregetedLinks ({commit}, aggregateLinks) {
+      return new Promise((resolve, reject) => {
+        getAggregatedLinks().then(response => {
+          let linkData = response.data.obj
+          const companyLinks = []
+          for (let l of linkData) {
+            let link = {}
+            link['source'] = l.partyAName
+            link['target'] = l.partyBName
+            link['value'] = Number(l.linkWeight)
+            companyLinks.push(link)
+          }
+          commit('SET_AGGREGATED_LINKS', companyLinks)
+          resolve()
+        }).catch(error => {
+          console.log(error)
+          reject(error)
+        })
+      })
+    },
+    GetAggregetedNodes ({commit}, nodes) {
+      return new Promise((resolve, reject) => {
+        getAggregatedNodes().then(response => {
+          let companyData = response.data.obj
+          const nodes = []
+          for (let co of companyData) {
+            let node = {}
+            node['draggable'] = 'true'
+            node['symbolSize'] = 10
+            node['value'] = co.capital
+            node['id'] = co.id
+            if (co.core === 1) {
+              node['category'] = 1
+            } else {
+              node['category'] = 0
+            }
+            nodes.push(node)
+          }
+          commit('SET_AGGREGATED_NODES', nodes)
           resolve()
         }).catch(error => {
           console.log(error)

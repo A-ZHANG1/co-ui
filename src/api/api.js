@@ -6,6 +6,18 @@ export function getAllLinks () {
     method: 'get'
   })
 }
+export function getAggregatedLinks () {
+  return request({
+    url: '/dimension/getAggregatedLinks',
+    method: 'get'
+  })
+}
+export function getAggregatedNodes () {
+  return request({
+    url: '/dimension/getAggregatedNodes',
+    method: 'get'
+  })
+}
 export function getAllCompanies () {
   return request({
     url: '/company/all',
@@ -74,7 +86,7 @@ export function getSubGraphByName (name, depth) {
 }
 export function getSupplyChain () {
   return request({
-    url: '/company/getSupplyChain',
+    url: '/supplychain/getSupplyChainPatternMatching',
     method: 'get'
   })
 }
